@@ -76,6 +76,54 @@ const registerForm = document.getElementById("registration");
 const loginForm = document.getElementById("login");
 const errorDisplay = document.getElementById("errorDisplay");
 
+// helpers
+
+// message = words, input = input box
+function showError(message, input) {
+    errorDisplay.textContent = message; //put words inside box
+    errorDisplay.style.display = "block"; //pop up on the page
+    input.focus(); //move to show problem
+}
+
+// hide box and erase old message 
+function clearError() {
+    errorDisplay.textContent = ""; // remove words inside box 
+    errorDisplay.style.display = "none"; // hide box here 
+}
+
+
+
+registerForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+  clearError();
+
+  const usernameInput = registerForm.elements.username;
+  const emailInput = registerForm.elements.email;
+  const passwordInput = registerForm.elements.password;
+  const passwordCheckInput = registerForm.elements.terms;
+  const termsInput = registerForm.elements.terms;
+
+  const username = usernameInput.value.trim().toLowerCase();
+  const email = emailInput.value.trim().toLowerCase();
+  const password = passwordInput.value;
+  const passwordCheck = passwordCheckInput.value
+
+//   username loops
+if (username === "") {
+    showError("Username Cannot be blank.", usernameInput);
+    return;
+}
+
+if (username.length < 4) {
+    showError("The username must be at least four characters long.", usernameInput);
+    return;
+
+}
+});
+
+
+
+
 
 
 
@@ -210,3 +258,4 @@ const errorDisplay = document.getElementById("errorDisplay");
 // Discuss with your partner the differences and similarities between your two approaches. Remember that there is rarely a strictly "correct" or "incorrect" way to solve a problem in development, but there are (almost always) more efficient approaches!
 
 // Remember to submit the link to your finished sandbox using the submission instructions included at the beginning of this document.
+})
