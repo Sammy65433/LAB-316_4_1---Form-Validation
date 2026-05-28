@@ -44,7 +44,7 @@ const registerForm = document.getElementById("registration");
 const loginForm = document.getElementById("login");
 const errorDisplay = document.getElementById("errorDisplay");
 
-console.log(registerForm);
+// console.log(registerForm);
 
 // helpers
 
@@ -61,13 +61,38 @@ function clearError() {
     errorDisplay.style.display = "none"; // hide box here
 }
 
-registerForm.addEventListener("submit", validate);
+// Storage Helpers
+// store users in an array
+function getUsers() {
 
-function validate(e) {
-    e.preventDefault();
-    // console.log("function");
+    // turn string into JavaScript array
+    return JSON.parse(localStorage.getItem('users') || '[]');
 }
-// clearError();
+function setUsers(arr) {
+// convert array into JSOn string
+// write string under key users
+    localStorage.setItem('users', JSON.stringify(arr));
+}
+
+// JSON.parse – deserialization
+// Takes a JSON string and reconstructs the original JavaScript value.
+
+// JSON.stringify – serialization
+// Takes any JavaScript value (object, array, number, etc.) and returns a 
+// JSON‑formatted string.
+
+
+
+
+
+registerForm.addEventListener("submit", e => {
+
+// function validate(e) {
+    e.preventDefault(); // stop submit
+    // console.log("function");
+    clearError(); //reset
+
+
 
 //registration form / look inside the form input = grab name="username"
 // const usernameInput = document.querySelector('#registration input[name="username"]');
@@ -75,151 +100,179 @@ const usernameInput = registerForm.elements.username;
 
 const emailInput = registerForm.elements.email;
 const passwordInput = registerForm.elements.password;
-const passwordCheckInput = registerForm.elements.terms;
-const termsInput = registerForm.elements.terms;
+const passwordCheckInput = registerForm.elements.passwordCheckInput;
+const termsInput = registerForm.elements.terms.checked;
 
 const username = usernameInput.value.trim().toLowerCase(); //what the user typed,
 const email = emailInput.value.trim().toLowerCase();
-const password = passwordInput.value;
-const passwordCheck = passwordCheckInput.value;
+const password1 = passwordInput.value;
+const password2 = passwordCheckInput.value;
 
 //   username loops
+// The username cannot be blank.
+// The username must be at least four characters long.
 
 // Username must contain at least two unique characters.
 if (uniqueCharacters(username) < 2) {
+    showError("Username must contain at least two unique characters.", usernameInput,);
+    return;
+    // false;
+}
+if (username === '') {
+    showError("The username cannot be blank.", usernameInput);
+    return;
+}
+
+//Username cannot contain whitespace.
+if (/\s/.test(username)) {
+    showError("Username cannot contain whitespace.", usernameInput);
+    return;
+    // false;
+}
+
+//"Username cannot contain special characters."
+// negated character set to check for anything other than a-z or 0-9
+if (/[^a-zA-Z0-9]/.test(username)) {
+    showError("Username cannot contain special characters.", usernameInput);
+    return;
+    // false;
+}
+
+// EMAIL VALIDATION - Html (type email)
+// / The email must be a valid email address.
+// The email must not be from the domain "example.com."
+if (email === "") {
+    showError("Email cannot be blank.", emailInput);
+    return;
+}
+if (email.includes("example.com")) {
     showError(
-        "Username must contain at least two unique characters.",
+        "The email must not be from the domain example.com.",
         usernameInput,
     );
-    return 
-    false;
-
-    //Username cannot contain whitespace.
-    if (/\s/.test(username)) {
-        showError(
-            "Username cannot contain whitespace.",
-            usernameInput,
-        );
-        return 
-        false;
-    }
-
-
-    //"Username cannot contain special characters."
-    // negated character set to check for anything other than a-z or 0-9
-    if (/[^a-zA-Z0-9]/.test(username)) {
-        showError(
-            "Username cannot contain special characters.",
-            usernameInput,
-        );
-        return false;
-    }
-
-
-
-
-    // EMAIL VALIDATION - Html (type email)
-    // / The email must be a valid email address.
-    // The email must not be from the domain "example.com."
-    if (email === '') {
-        showError('Email cannot be blank.', emailInput);
-        return;
-    }
-    if (email.includes("example.com")) {
-        showError(
-            "The email must not be from the domain example.com.",
-            usernameInput,
-        );
-        return false;
-    }
-
-    // Password Validation
-
-
-    // Passwords must be at least 12 characters long.
-    if (password.length < 12) {
-        console.log(password)
-        showError('Passwords must be at least 12 characters long.', passwordInput);
-        return;
-    }
-
-    // Passwords must have at least one uppercase and one lowercase letter.
-    if (!/[a-z]/.test(password) || !/[A-Z]/.test(password)) {
-        showError('Passwords must have at least one uppercase and one lowercase letter.', passwordInput);
-        return;
-    }
-    // Passwords must contain at least one number.
-    if (!/[0-9]/.test(password)) {
-        showError('Passwords must contain at least one number.', passwordInput);
-        return;
-    }
-    // Passwords must contain at least one special character.
-
-    // Passwords cannot contain the word "password" (uppercase, lowercase, or mixed).
-
-    // Passwords cannot contain the username.
-
-    // Both passwords must match.
-
-
-
-    function uniqueCharacters(str) {
-        let uniqueChar = [];
-
-        //loop over the string and check each char ("c")
-
-        for (let c of username) {
-            if (uniqueChar.includes(c) === false) {
-                uniqueChar.push(c);
-            }
-        }
-        // console.log(uniqueChar);
-
-        return uniqueChar.length;
-    }
+    return false;
 }
-//   
 
-// Part 3: Registration Form Validation Requirements
-
-// For the Registration Form section of the page, implement the
-// following validation requirements:
-
-// Registration Form - Username Validation:
-
-// The username cannot be blank. -Html
-
-// The username must be at least four characters long. -Html
-
-// The username must contain at least two unique characters.
-
-// The username cannot contain any special characters or whitespace.
-
-// Registration Form - Email Validation:
-
-// The email must be a valid email address.
-
-// The email must not be from the domain "example.com."
-
-// Registration Form - Password Validation:
+// Password Validation
 
 // Passwords must be at least 12 characters long.
+if (password.length < 12) {
+    console.log(password1);
+    showError("Passwords must be at least 12 characters long.", passwordInput);
+    return;
+}
 
 // Passwords must have at least one uppercase and one lowercase letter.
-
+if (!/[a-z]/.test(password1) || !/[A-Z]/.test(password)) {
+    showError(
+        "Passwords must have at least one uppercase and one lowercase letter.",
+        passwordInput,
+    );
+    return;
+}
 // Passwords must contain at least one number.
-
+if (!/[0-9]/.test(password1)) {
+    showError("Passwords must contain at least one number.", passwordInput);
+    return;
+}
 // Passwords must contain at least one special character.
 
-// Passwords cannot contain the word "password" (uppercase, lowercase, or mixed).
 
+
+// Passwords cannot contain the word "password" (uppercase, lowercase, or mixed).
+if (/password/i.test(password1)) {
+    showError('Passwords cannot contain the word "password".', passwordInput);
+    return;
+}
 // Passwords cannot contain the username.
+if (password.includes(username)) {
+    showError('Passwords cannot contain the username.', passwordInput);
+    return;
+}
 
 // Both passwords must match.
+if (password !== password2) {
+    showError('Both passwords must match.', passwordInput);
+    return;
+}
+
+function uniqueCharacters(str) {
+    let uniqueChar = [];
+
+    //loop over the string and check each char ("c")
+
+    for (let c of username) {
+        if (uniqueChar.includes(c) === false) {
+            uniqueChar.push(c);
+        }
+    }
+    // console.log(uniqueChar);
+
+    return uniqueChar.length;
+}
 
 // Registration Form - Terms and Conditions:
 
+
 // The terms and conditions must be accepted.
+if (!terms) {
+    showError('Terms and conditions must be accepted.', termsInput);
+    return;
+}
+
+// Store User
+// users contain new user 
+users.push({username, email, password: password});
+
+// JSON writes it too localstroge under key users
+setUsers(users);
+
+
+// hide errors 
+registerForm.reset(); //clear everything in registration form
+clearError(); // hide errordisplay and empty 
+alert('Registration successful!'); // give feedback
+
+});
+
+// LOGIN 
+loginForm.addEventListener('submit', e => {
+    e.preventDefault(); //dont let it submit
+    clearError(); //make sure no old message is popping up
+
+
+ const usernameRaw = loginForm.elements.username.value.trim().toLowerCase();
+ const passwordRaw = loginForm.elements.password.value;
+ const keepLogged = loginForm.elements.keepLogged.checked // tru/false?
+
+
+ // Login Form - Username Validation:
+
+
+//  Username 
+// The username cannot be blank.
+if (usernameRaw === '') { //empty feild?
+    showError('The username cannot be blank.', loginForm.elements.username);
+    return; //stop 
+}
+
+
+// The username must exist (within localStorage). Remember that usernames are stored 
+// in all lowercase, but the username field accepts (and should not invalidate) 
+// mixed-case input.
+
+const users = getUsers(); //read array from localStorage 
+const user = users.find(u => u.username === usernameRaw);
+
+if (!user) {
+    showError('Username does not exist.', loginForm.elements.username);
+}
+
+
+})
+//
+
+
 
 // Registration Form - Form Submission:
 
