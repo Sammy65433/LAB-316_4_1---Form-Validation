@@ -49,8 +49,8 @@ console.log(registerForm);
 // helpers
 
 // message = words, input = input box
-function showError(message, input) {
-    errorDisplay.textContent = message; //put words inside box
+function showError(msg, input) {
+    errorDisplay.textContent = msg; //put words inside box
     errorDisplay.style.display = "block"; //pop up on the page
     input.focus(); //move to show problem
 }
@@ -65,7 +65,7 @@ registerForm.addEventListener("submit", validate);
 
 function validate(e) {
     e.preventDefault();
-    console.log("function");
+    // console.log("function");
 }
 // clearError();
 
@@ -91,7 +91,8 @@ if (uniqueCharacters(username) < 2) {
         "Username must contain at least two unique characters.",
         usernameInput,
     );
-    return false;
+    return 
+    false;
 
     //Username cannot contain whitespace.
     if (/\s/.test(username)) {
@@ -99,14 +100,15 @@ if (uniqueCharacters(username) < 2) {
             "Username cannot contain whitespace.",
             usernameInput,
         );
-        return false;
+        return 
+        false;
     }
 
-    
-//"Username cannot contain special characters."
-// negated character set to check for anything other than a-z or 0-9
+
+    //"Username cannot contain special characters."
+    // negated character set to check for anything other than a-z or 0-9
     if (/[^a-zA-Z0-9]/.test(username)) {
-showError(
+        showError(
             "Username cannot contain special characters.",
             usernameInput,
         );
@@ -116,30 +118,48 @@ showError(
 
 
 
-// EMAIL VALIDATION - Html (type email)
-// / The email must be a valid email address.
-// The email must not be from the domain "example.com."
-if (email.includes("example.com")) {
-    showError(
+    // EMAIL VALIDATION - Html (type email)
+    // / The email must be a valid email address.
+    // The email must not be from the domain "example.com."
+    if (email === '') {
+        showError('Email cannot be blank.', emailInput);
+        return;
+    }
+    if (email.includes("example.com")) {
+        showError(
             "The email must not be from the domain example.com.",
             usernameInput,
         );
         return false;
-} 
+    }
 
-// Passwords must be at least 12 characters long.
+    // Password Validation
 
-// Passwords must have at least one uppercase and one lowercase letter.
 
-// Passwords must contain at least one number.
+    // Passwords must be at least 12 characters long.
+    if (password.length < 12) {
+        console.log(password)
+        showError('Passwords must be at least 12 characters long.', passwordInput);
+        return;
+    }
 
-// Passwords must contain at least one special character.
+    // Passwords must have at least one uppercase and one lowercase letter.
+    if (!/[a-z]/.test(password) || !/[A-Z]/.test(password)) {
+        showError('Passwords must have at least one uppercase and one lowercase letter.', passwordInput);
+        return;
+    }
+    // Passwords must contain at least one number.
+    if (!/[0-9]/.test(password)) {
+        showError('Passwords must contain at least one number.', passwordInput);
+        return;
+    }
+    // Passwords must contain at least one special character.
 
-// Passwords cannot contain the word "password" (uppercase, lowercase, or mixed).
+    // Passwords cannot contain the word "password" (uppercase, lowercase, or mixed).
 
-// Passwords cannot contain the username.
+    // Passwords cannot contain the username.
 
-// Both passwords must match.
+    // Both passwords must match.
 
 
 
