@@ -1,3 +1,69 @@
+# ALAB 316.4.1 – Form Validation  
+**Status:** *Partial – registration validation complete, 
+login validation 80 % finished.*
+
+
+### 1.1 Project Overview 
+a small web page contains two forms
+
+ **Registration**  Collect a new user’s *username*, *email*, *password* (twice) and a *terms‑and‑conditions* checkbox. 
+ **Login**  Authenticate an existing user (username + password) and optionally keep them “logged in”. |
+
+All validation is performed **client‑side** with a mix of HTML attributes and JavaScript.  
+Valid users are persisted in **`localStorage`** as a JSON‑encoded array of objects.
+
+### 2.1 Helper utilities
+```js
+function showError(msg, input) { … }   // display error, focus field
+function clearError() { … }            // hide the error box
+function getUsers() { … }              // JSON.parse from localStorage
+function setUsers(arr) { … }           // JSON.stringify → localStorage
+function uniqueCharCount(str) { … }    // count distinct chars (username rule)
+```
+
+
+### 2.2 Registration form validation (fully functional)
+
+| Username not blank, ≥ 4 chars | `if (username === '') …` |
+| Username ≥ 2 unique chars | `uniqueCharCount(username) < 2` |
+| No whitespace | `/\s/.test(username)` |
+| No special characters | `/[^a-zA-Z0-9]/.test(username)` |
+| Username must be unique | `users.some(u => u.username === username)` |
+| Email not blank & valid format | HTML `required` + `type="email"`; extra check `if (email === '')` |
+| Email not from `example.com` | `email.includes('example.com')` |
+| Password ≥ 12 chars | `if (password1.length < 12)` |
+| Upper‑case & lower‑case | `!/[a-z]/.test(pwd) || !/[A-Z]/.test(pwd)` |
+| At least one number | `/[0-9]/.test(pwd)` |
+| At least one special char | `/[!@#$%^&*(),.?":{}|<>]/.test(pwd)` |
+| No “password” word | `/password/i.test(pwd)` |
+| No username inside password | `pwd.toLowerCase().includes(username)` |
+| Passwords match | `pwd !== pwd2` |
+| Terms accepted | `if (!terms) …` |
+| **Success flow** | `users.push({username,email,password:pwd}); setUsers(users); registerForm.reset(); alert('Registration successful!');` |
+
+All error messages appear in the `<div id="errorDisplay">`.
+
+
+
+### 2.3 Login form – groundwork
+
+| Prevent default submit & clear previous error | `e.preventDefault(); clearError();` |
+| Read & normalise inputs (lower‑case username) | `const usernameRaw = …; const passwordRaw = …;` |
+| Load stored users & locate matching username | `const user = users.find(u => u.username === usernameRaw);` |
+| Username blank check | `if (usernameRaw === '') …` |
+| Username existence check | `if (!user) …` |
+| Password blank check | `if (passwordRaw === '') …` |
+
+The **password correctness** and **final success message** (including “keep me logged in”) are still to be added.
+
+
+
+
+
+
+
+
+
 
 
 
